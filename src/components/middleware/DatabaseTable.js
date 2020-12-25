@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DatabaseTable = ({ columns, getData }) => {
+const DatabaseTable = ({ columns, events, getData }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
@@ -42,6 +42,7 @@ const DatabaseTable = ({ columns, getData }) => {
         columns={columns}
         data={data.list}
         total={data.total}
+        events={events}
         onChange={handleChange}
       />
       {loading && (

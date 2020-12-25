@@ -8,7 +8,7 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import { Apps, HomeWork } from '@material-ui/icons';
+import { Apps, HomeWork, Archive, MenuBook, BusinessCenter } from '@material-ui/icons';
 import RouteButton from './RouteButton';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +50,24 @@ const Menu = () => {
               <HomeWork />
             </ListItemIcon>
             <ListItemText primary="Фирмы" />
+          </RouteButton>
+          <RouteButton to="/items" component={MenuItem}>
+            <ListItemIcon>
+              <BusinessCenter />
+            </ListItemIcon>
+            <ListItemText primary="Товары" />
+          </RouteButton>
+          <RouteButton to="/products" component={MenuItem}>
+            <ListItemIcon>
+              <MenuBook />
+            </ListItemIcon>
+            <ListItemText primary="Продукты" />
+          </RouteButton>
+          <RouteButton to="/stashy" component={MenuItem}>
+            <ListItemIcon>
+              <Archive />
+            </ListItemIcon>
+            <ListItemText primary="Склад" />
           </RouteButton>
         </List>
       </div>

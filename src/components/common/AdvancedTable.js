@@ -11,7 +11,7 @@ import {
   TableCell,
   TableSortLabel,
 } from '@material-ui/core';
-import { noop } from '../../constants/utils';
+import { noop, emptyEvents } from '../../constants/utils';
 
 export const Order = {
   Ascending: 'asc',
@@ -20,7 +20,14 @@ export const Order = {
 
 export const sizes = [5, 10, 15, 20, 25];
 
-const AdvancedTable = ({ columns = [], data = [], total = 0, onChange = noop, ...props }) => {
+const AdvancedTable = ({
+  columns = [],
+  data = [],
+  total = 0,
+  events = emptyEvents,
+  onChange = noop,
+  ...props
+}) => {
   const [order, setOrder] = useState({
     column: null,
     direction: Order.Ascending,
@@ -32,6 +39,9 @@ const AdvancedTable = ({ columns = [], data = [], total = 0, onChange = noop, ..
   });
 
   useEffect(() => {
+    events.on('refresh', () => {
+      onChange(order, pagination);
+    });
     onChange(order, pagination);
   }, [order, pagination]);
 
