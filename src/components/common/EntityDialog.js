@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import {
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  makeStyles,
-} from '@material-ui/core';
+import { DialogTitle, DialogContent, DialogActions, Button, makeStyles } from '@material-ui/core';
 import { Formik } from 'formik';
 import ThemedDialog from '../themed/ThemedDialog';
 import { promiseNoop } from '../../constants/utils';
+import AdvancedField from './AdvancedField';
+
+const prepareValues = (values) =>
+  Object.entries(values).reduce((acc, [key, value]) => {
+    if (typeof value === 'object') {
+      acc[key] = value.id;
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -33,7 +37,11 @@ const EntityDialog = ({
   const handleClose = () => setOpen(false);
   const classes = useStyles();
   const initialValues = fields.reduce((acc, field) => {
-    acc[field.name] = values[field.name] || '';
+    if (field.isReference) {
+      acc[field.name] = field.reference.toOption(values);
+    } else {
+      acc[field.name] = values[field.name] || '';
+    }
 
     return acc;
   }, {});
@@ -50,9 +58,10 @@ const EntityDialog = ({
   };
   const handleSubmit = (values) => {
     setSubmitting(true);
-    onSubmit(values)
+    onSubmit(prepareValues(values))
       .then((response) => {
         if (response.done) {
+          setSubmitting(false);
           handleClose();
         } else {
           alert(response.error);
@@ -69,21 +78,23 @@ const EntityDialog = ({
       <ThemedDialog open={open}>
         <DialogTitle>{title}</DialogTitle>
         <Formik initialValues={initialValues} validate={validate} onSubmit={handleSubmit}>
-          {({ values, errors, touched, handleChange, handleSubmit }) => (
+          {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
             <>
               <DialogContent className={classes.content}>
                 {fields.map((field) => (
-                  <TextField
+                  <AdvancedField
+                    field={field}
                     label={field.text}
                     name={field.name}
                     value={values[field.name]}
                     required={field.required}
                     error={Boolean(touched[field.name] && errors[field.name])}
                     helperText={touched[field.name] && errors[field.name]}
-                    onChange={handleChange}
+                    onChange={field.isReference ? setFieldValue : handleChange}
                     key={field.name}
                   />
                 ))}
+                <pre>{JSON.stringify(values, null, 4)}</pre>
               </DialogContent>
               <DialogActions>
                 <Button color="primary" onClick={handleClose} disabled={submitting}>
