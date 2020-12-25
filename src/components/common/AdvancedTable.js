@@ -21,6 +21,7 @@ export const Order = {
 export const sizes = [5, 10, 15, 20, 25];
 
 const AdvancedTable = ({
+  children,
   columns = [],
   data = [],
   total = 0,
@@ -37,6 +38,8 @@ const AdvancedTable = ({
     page: 0,
     size: sizes[0],
   });
+  const haveActions = children !== undefined;
+  const columnsCount = haveActions ? columns.length + 1 : columns.length;
 
   useEffect(() => {
     events.on('refresh', () => {
@@ -87,6 +90,7 @@ const AdvancedTable = ({
                 )}
               </TableCell>
             ))}
+            {haveActions && <TableCell align="right" />}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -95,6 +99,7 @@ const AdvancedTable = ({
               {columns.map((column) => (
                 <TableCell key={column.name}>{entry[column.name]}</TableCell>
               ))}
+              {haveActions && <TableCell align="right">{children(entry)}</TableCell>}
             </TableRow>
           ))}
         </TableBody>
@@ -102,7 +107,7 @@ const AdvancedTable = ({
           <TableRow>
             <TablePagination
               rowsPerPageOptions={sizes}
-              colSpan={columns.length}
+              colSpan={columnsCount}
               count={total}
               rowsPerPage={pagination.size}
               page={pagination.page}

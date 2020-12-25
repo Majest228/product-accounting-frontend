@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DatabaseTable = ({ columns, events, getData }) => {
+const DatabaseTable = ({ columns, events, getData, children }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
@@ -44,7 +44,9 @@ const DatabaseTable = ({ columns, events, getData }) => {
         total={data.total}
         events={events}
         onChange={handleChange}
-      />
+      >
+        {children}
+      </AdvancedTable>
       {loading && (
         <div className={classes.loader}>
           <CircularProgress />

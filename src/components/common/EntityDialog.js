@@ -19,14 +19,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddDialog = ({ children, title, fields = [], onSubmit = promiseNoop }) => {
+const EntityDialog = ({
+  children,
+  title,
+  submit,
+  fields = [],
+  values = {},
+  onSubmit = promiseNoop,
+}) => {
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const classes = useStyles();
   const initialValues = fields.reduce((acc, field) => {
-    acc[field.name] = '';
+    acc[field.name] = values[field.name] || '';
 
     return acc;
   }, {});
@@ -88,7 +95,7 @@ const AddDialog = ({ children, title, fields = [], onSubmit = promiseNoop }) => 
                   onClick={handleSubmit}
                   disabled={submitting}
                 >
-                  Добавить
+                  {submit}
                 </Button>
               </DialogActions>
             </>
@@ -99,4 +106,4 @@ const AddDialog = ({ children, title, fields = [], onSubmit = promiseNoop }) => 
   );
 };
 
-export default AddDialog;
+export default EntityDialog;

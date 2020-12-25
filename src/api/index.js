@@ -23,6 +23,7 @@ const toFormData = (data) => {
 };
 export const getCategories = (params) => getWithParams('categories', params);
 export const addCategory = (values) => post('categories/add', values);
+export const editCategory = (values) => post('categories/edit', values);
 export const getManufacturer = (params) => getWithParams('manufacturer', params);
 export const getItem = (params) => getWithParams('items', params);
 export const getProducts = (params) => getWithParams('products', params);

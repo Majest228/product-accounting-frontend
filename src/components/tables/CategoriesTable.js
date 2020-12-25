@@ -1,9 +1,11 @@
 import React from 'react';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, IconButton } from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import DatabaseTable from '../middleware/DatabaseTable';
 import Column from '../../constants/column';
 import { getCategories } from '../../api';
 import AddCategory from '../dialogs/AddCategory';
+import EditCategory from '../dialogs/EditCategory';
 import ButtonsContainer from '../ButtonsContainer';
 import EventEmitter from '../../constants/eventEmitter';
 
@@ -11,7 +13,6 @@ const columns = [new Column('id', 'Номер категории'), new Column('
 const events = new EventEmitter();
 
 const CategroiesTable = () => {
-  console.log(events);
   return (
     <>
       <Typography variant="h3">Категории</Typography>
@@ -25,7 +26,17 @@ const CategroiesTable = () => {
         </AddCategory>
       </ButtonsContainer>
 
-      <DatabaseTable columns={columns} events={events} getData={getCategories} />
+      <DatabaseTable columns={columns} events={events} getData={getCategories}>
+        {(entry) => (
+          <EditCategory id={entry.id} values={entry} events={events}>
+            {(handleOpen, handleClose) => (
+              <IconButton color="primary" onClick={handleOpen}>
+                <Edit />
+              </IconButton>
+            )}
+          </EditCategory>
+        )}
+      </DatabaseTable>
     </>
   );
 };

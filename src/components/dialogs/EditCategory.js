@@ -1,14 +1,17 @@
 import React from 'react';
 import EntityDialog from '../common/EntityDialog';
 import Field from '../../constants/field';
-import { addCategory } from '../../api';
+import { editCategory } from '../../api';
 import { emptyEvents } from '../../constants/utils';
 
 const fields = [new Field('name', 'Название категории')];
 
-const AddCategory = ({ children, events = emptyEvents }) => {
+const EditCategory = ({ children, id = null, values, events = emptyEvents }) => {
   const handleSubmit = (values) => {
-    return addCategory(values).then((response) => {
+    return editCategory({
+      id,
+      ...values,
+    }).then((response) => {
       if (response.done) {
         events.emit('refresh');
       }
@@ -17,9 +20,10 @@ const AddCategory = ({ children, events = emptyEvents }) => {
   };
   return (
     <EntityDialog
-      title="Добавление категории"
-      submit="Добавить"
+      title="Изменение категории"
+      submit="Изменить"
       fields={fields}
+      values={values}
       onSubmit={handleSubmit}
     >
       {children}
@@ -27,4 +31,4 @@ const AddCategory = ({ children, events = emptyEvents }) => {
   );
 };
 
-export default AddCategory;
+export default EditCategory;
