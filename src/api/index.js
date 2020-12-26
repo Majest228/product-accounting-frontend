@@ -25,6 +25,8 @@ export const getCategories = (params) => getWithParams('categories', params);
 export const addCategory = (values) => post('categories/add', values);
 export const editCategory = (values) => post('categories/edit', values);
 export const getManufacturer = (params) => getWithParams('manufacturer', params);
+export const addManufacturer = (values) => post('manufacturer/add', values);
+export const editManufacturer = (values) => post('manufacturer/edit', values);
 export const getItem = (params) => getWithParams('items', params);
 export const addItem = (values) => post('items/add', values);
 export const editItem = (values) => post('items/edit', values);
