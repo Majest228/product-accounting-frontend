@@ -9,11 +9,22 @@ import EditManufacturer from '../dialogs/manufacturers/EditManufacturer';
 import DeleteManufacturer from '../dialogs/manufacturers/DeleteManufacturer';
 import ButtonsContainer from '../ButtonsContainer';
 import EventEmitter from '../../constants/eventEmitter';
+import { prepareDataForExport } from '../../constants/utils';
+import ExportPdf from '../common/ExportPdf';
 
 const columns = [new Column('id', 'Номер фирмы'), new Column('name', 'Название фирмы')];
 const events = new EventEmitter();
 
 const ManufacturerTable = () => {
+  const exportPdf = (createPdf) => {
+    getManufacturer().then((data) => {
+      createPdf(
+        columns.map((column) => column.text),
+        ['auto', '*'],
+        prepareDataForExport(data.list, columns)
+      );
+    });
+  };
   return (
     <>
       <Typography variant="h3">Фирмы</Typography>
@@ -25,6 +36,13 @@ const ManufacturerTable = () => {
             </Button>
           )}
         </AddManufacturer>
+        <ExportPdf filename="Фирмы">
+          {(handleClick) => (
+            <Button color="secondary" variant="contained" onClick={() => exportPdf(handleClick)}>
+              Export PDF
+            </Button>
+          )}
+        </ExportPdf>
       </ButtonsContainer>
 
       <DatabaseTable columns={columns} events={events} getData={getManufacturer}>

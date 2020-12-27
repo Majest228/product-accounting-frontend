@@ -9,11 +9,22 @@ import EditCategory from '../dialogs/EditCategory';
 import DeleteCategory from '../../components/dialogs/DeleteCategory';
 import ButtonsContainer from '../ButtonsContainer';
 import EventEmitter from '../../constants/eventEmitter';
+import ExportPdf from '../common/ExportPdf';
+import { prepareDataForExport } from '../../constants/utils';
 
 const columns = [new Column('id', 'Номер категории'), new Column('name', 'Название категории')];
 const events = new EventEmitter();
 
 const CategroiesTable = () => {
+  const exportPdf = (createPdf) => {
+    getCategories().then((data) => {
+      createPdf(
+        columns.map((column) => column.text),
+        ['auto', '*'],
+        prepareDataForExport(data.list, columns)
+      );
+    });
+  };
   return (
     <>
       <Typography variant="h3">Категории</Typography>
@@ -25,6 +36,13 @@ const CategroiesTable = () => {
             </Button>
           )}
         </AddCategory>
+        <ExportPdf filename="Категории">
+          {(handleClick) => (
+            <Button color="secondary" variant="contained" onClick={() => exportPdf(handleClick)}>
+              Export PDF
+            </Button>
+          )}
+        </ExportPdf>
       </ButtonsContainer>
 
       <DatabaseTable columns={columns} events={events} getData={getCategories}>

@@ -9,7 +9,8 @@ import { Edit, DeleteOutline } from '@material-ui/icons';
 import AddItems from '../dialogs/items/AddItems';
 import EditItems from '../dialogs/items/EditItems';
 import DeleteItem from '../dialogs/items/DeleteItem';
-
+import { prepareDataForExport } from '../../constants/utils';
+import ExportPdf from '../common/ExportPdf';
 const columns = [
   new Column('id', 'Номер Товара'),
   new Column('name', 'Название товара'),
@@ -18,6 +19,15 @@ const columns = [
 const events = new EventEmitter();
 
 const ItemsTable = () => {
+  const exportPdf = (createPdf) => {
+    getItem().then((data) => {
+      createPdf(
+        columns.map((column) => column.text),
+        ['auto', '*', '*'],
+        prepareDataForExport(data.list, columns)
+      );
+    });
+  };
   return (
     <>
       <Typography variant="h3">Товары</Typography>
@@ -29,6 +39,13 @@ const ItemsTable = () => {
             </Button>
           )}
         </AddItems>
+        <ExportPdf filename="Товары">
+          {(handleClick) => (
+            <Button color="secondary" variant="contained" onClick={() => exportPdf(handleClick)}>
+              Export PDF
+            </Button>
+          )}
+        </ExportPdf>
       </ButtonsContainer>
 
       <DatabaseTable columns={columns} events={events} getData={getItem}>

@@ -1,8 +1,11 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import DatabaseTable from '../middleware/DatabaseTable';
 import Column from '../../constants/column';
 import { getStashy } from '../../api';
+import ExportPdf from '../common/ExportPdf';
+import { prepareDataForExport } from '../../constants/utils';
+import ButtonsContainer from '../ButtonsContainer';
 
 const columns = [
   new Column('id', 'Номер Продукта'),
@@ -12,11 +15,30 @@ const columns = [
   new Column('count', 'Количество'),
 ];
 
-const StashyTable = () => (
-  <>
-    <Typography variant="h3">Продукты</Typography>
-    <DatabaseTable columns={columns} getData={getStashy} />
-  </>
-);
-
+const StashyTable = () => {
+  const exportPdf = (createPdf) => {
+    getStashy().then((data) => {
+      createPdf(
+        columns.map((column) => column.text),
+        ['auto', '*', '*', '*', '*'],
+        prepareDataForExport(data.list, columns)
+      );
+    });
+  };
+  return (
+    <>
+      <Typography variant="h3">Продукты</Typography>
+      <ButtonsContainer>
+        <ExportPdf filename="Склад">
+          {(handleClick) => (
+            <Button color="secondary" variant="contained" onClick={() => exportPdf(handleClick)}>
+              Export PDF
+            </Button>
+          )}
+        </ExportPdf>
+      </ButtonsContainer>
+      <DatabaseTable columns={columns} getData={getStashy} />
+    </>
+  );
+};
 export default StashyTable;
