@@ -94,7 +94,6 @@ const EntityDialog = ({
                     key={field.name}
                   />
                 ))}
-                <pre>{JSON.stringify(values, null, 4)}</pre>
               </DialogContent>
               <DialogActions>
                 <Button color="primary" onClick={handleClose} disabled={submitting}>

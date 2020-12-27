@@ -5,9 +5,10 @@ import Column from '../../constants/column';
 import { getItem } from '../../api';
 import ButtonsContainer from '../ButtonsContainer';
 import EventEmitter from '../../constants/eventEmitter';
-import { Edit } from '@material-ui/icons';
+import { Edit, DeleteOutline } from '@material-ui/icons';
 import AddItems from '../dialogs/items/AddItems';
 import EditItems from '../dialogs/items/EditItems';
+import DeleteItem from '../dialogs/items/DeleteItem';
 
 const columns = [
   new Column('id', 'Номер Товара'),
@@ -32,13 +33,22 @@ const ItemsTable = () => {
 
       <DatabaseTable columns={columns} events={events} getData={getItem}>
         {(entry) => (
-          <EditItems id={entry.id} values={entry} events={events}>
-            {(handleOpen, handleClose) => (
-              <IconButton color="primary" onClick={handleOpen}>
-                <Edit />
-              </IconButton>
-            )}
-          </EditItems>
+          <>
+            <EditItems id={entry.id} values={entry} events={events}>
+              {(handleOpen, handleClose) => (
+                <IconButton color="primary" onClick={handleOpen}>
+                  <Edit />
+                </IconButton>
+              )}
+            </EditItems>
+            <DeleteItem id={entry.id} events={events}>
+              {(handleOpen, handleClose) => (
+                <IconButton color="primary" onClick={handleOpen}>
+                  <DeleteOutline />
+                </IconButton>
+              )}
+            </DeleteItem>
+          </>
         )}
       </DatabaseTable>
     </>
